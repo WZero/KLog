@@ -1,8 +1,10 @@
 package com.socks.library;
 
 
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.Keep;
+import androidx.annotation.Nullable;
 
 import com.socks.library.klog.BaseLog;
 import com.socks.library.klog.FileLog;
@@ -22,15 +24,16 @@ import java.io.StringWriter;
  * </ol>
  *
  * @author zhaokaiqiang
- *         github https://github.com/ZhaoKaiQiang/KLog
- *         15/11/17 扩展功能，添加对文件的支持
- *         15/11/18 扩展功能，增加对XML的支持，修复BUG
- *         15/12/8  扩展功能，添加对任意参数的支持
- *         15/12/11 扩展功能，增加对无限长字符串支持
- *         16/6/13  扩展功能，添加对自定义全局Tag的支持,修复内部类不能点击跳转的BUG
- *         16/6/15  扩展功能，添加不能关闭的KLog.debug(),用于发布版本的Log打印,优化部分代码
- *         16/6/20  扩展功能，添加堆栈跟踪功能KLog.trace()
+ * github https://github.com/ZhaoKaiQiang/KLog
+ * 15/11/17 扩展功能，添加对文件的支持
+ * 15/11/18 扩展功能，增加对XML的支持，修复BUG
+ * 15/12/8  扩展功能，添加对任意参数的支持
+ * 15/12/11 扩展功能，增加对无限长字符串支持
+ * 16/6/13  扩展功能，添加对自定义全局Tag的支持,修复内部类不能点击跳转的BUG
+ * 16/6/15  扩展功能，添加不能关闭的KLog.debug(),用于发布版本的Log打印,优化部分代码
+ * 16/6/20  扩展功能，添加堆栈跟踪功能KLog.trace()
  */
+@Keep
 public final class KLog {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -270,27 +273,14 @@ public final class KLog {
     }
 
     private static String[] wrapperContent(int stackTraceIndex, String tagStr, Object... objects) {
-
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
         StackTraceElement targetElement = stackTrace[stackTraceIndex];
-        String className = targetElement.getClassName();
-        String[] classNameInfo = className.split("\\.");
-        if (classNameInfo.length > 0) {
-            className = classNameInfo[classNameInfo.length - 1] + SUFFIX;
-        }
-
-        if (className.contains("$")) {
-            className = className.split("\\$")[0] + SUFFIX;
-        }
-
+        String className = targetElement.getFileName();
         String methodName = targetElement.getMethodName();
         int lineNumber = targetElement.getLineNumber();
-
         if (lineNumber < 0) {
             lineNumber = 0;
         }
-
         String tag = (tagStr == null ? className : tagStr);
 
         if (mIsGlobalTagEmpty && TextUtils.isEmpty(tag)) {
@@ -319,7 +309,7 @@ public final class KLog {
                 }
             }
             return stringBuilder.toString();
-        } else if (objects.length == 1){
+        } else if (objects.length == 1) {
             Object object = objects[0];
             return object == null ? NULL : object.toString();
         } else {

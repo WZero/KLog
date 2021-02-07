@@ -1,17 +1,17 @@
 package com.socks.sample;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -35,8 +35,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             KLog.d("Inner Class Test");
+            new Name().toString();
         }
     };
+
+    static class Name{
+        @NonNull
+        @Override
+        public String toString() {
+            KLog.d("Inner Class Test");
+            return super.toString();
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
-        if (toolbar != null) {
-            toolbar.setTitleTextColor(Color.WHITE);
-            setSupportActionBar(toolbar);
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolBar);
+//        if (toolbar != null) {
+//            toolbar.setTitleTextColor(Color.WHITE);
+//            setSupportActionBar(toolbar);
+//        }
     }
 
     private void initData() {
